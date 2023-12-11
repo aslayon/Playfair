@@ -60,14 +60,10 @@ void Playfair::makeTable() {
 		}
 
 		if (letter_put == mPair[0] || letter_put == mPair[2]) {   //만약 조건에 들어가면 바꿔치기
-			key_tmp = '*';
+			letter_put = '*';
 		}
 		keyptr++;
 
-		letter_put = key_tmp[0];
-		if (letter_put >= 'a' && letter_put <= 'z') {
-			letter_put = letter_put - 32;
-		}
 
 		if (num == 0) {
 
@@ -109,19 +105,10 @@ void Playfair::makeTable() {
 		if (alphabet == mPair.substr(0, 1) || alphabet == mPair.substr(2, 1)) {   //만약 조건에 들어가면 바꿔치기
 			letter_put = '*';
 		}
-
-		if (alphabet == mPair.substr(0, 1) || alphabet == mPair.substr(2, 1)) {   //만약 조건에 들어가면 바꿔치기
-			letter_put = '*';
-		}
-
-
-
 		else letter_put = alphabet[0];
 
 
-		if (letter_put >= 'a' && letter_put <= 'z') {
-			letter_put = letter_put - 32;
-		}
+		
 
 
 
@@ -167,14 +154,14 @@ void Playfair::showTable() {
 
 string Playfair::makeEncryption(string mEncryption) {
 
-	for (int i = mEncryption.length(); i >= 0; --i) {
+	for (int i = mEncryption.length(); i >= 0; --i) { //공백 지우기
 		if (mEncryption[i] == ' ') {
 			mEncryption.erase(i,1);
 		}
 	}
 
 	string input;						//x 를 삽입한 암호화 되기 전 
-	string output_whole = "";
+	string output_whole = "";			//암호화된 모든 문장
 	if (mEncryption.empty()) {
 		cout << "입력 없음" << endl;
 		return 0;
@@ -201,10 +188,10 @@ string Playfair::makeEncryption(string mEncryption) {
 			LastFlag = 1;
 		}
 		else {
-			int count_1 = fIndex - startindex;
-			string part = mEncryption.substr(startindex, count_1);
+			int count_1 = fIndex - startindex;	//문장의 글자수 얻기
+			string part = mEncryption.substr(startindex, count_1); //스타트부터 찾은 곳까지
 
-			input = part;
+			input = part;									
 			startindex = fIndex + 1;
 		}
 
@@ -216,7 +203,8 @@ string Playfair::makeEncryption(string mEncryption) {
 		string front, back;
 
 		for (int i = 0; i < len; i = i + 2) {
-			front = tmp.substr(i, 1);
+			if (i+1 > len)break;
+			front = tmp.substr(i, 1);														//2개씩 끊어 읽기
 			if (front[0] >= 'a' && front[0] <= 'z') front[0] = toupper(front[0]);
 			back = tmp.substr(i + 1, 1);
 			if (back[0] >= 'a' && back[0] <= 'z') back[0] = toupper(back[0]);		//대문자로 변경
@@ -224,7 +212,7 @@ string Playfair::makeEncryption(string mEncryption) {
 
 
 
-			if (front == back || front == mPair.substr(0, 1) || front == mPair.substr(2, 1)) {   //앞뒤 같거나  페어와 겹치면
+			if (front == back) {   //앞뒤 같으면 X 추가
 
 
 				tmp.insert(i + 1, "X");
@@ -337,6 +325,7 @@ string Playfair::makeEncryption(string mEncryption) {
 			count += 2;
 		}
 		output += '.';
+		
 		count++;
 		cout << endl <<"암호화 결과: " << output << endl;
 
@@ -371,7 +360,7 @@ int main() {
 		cout << "string :";
 		getline(cin, a);
 		string result = pfair.makeEncryption(a);
-		cout << endl<<"전체 번역 결과" << result<<endl<<endl;
+		cout << endl<<"전체 번역 결과"<<endl << result<<endl<<endl;
 	}
 	if (mode == 2) {
 
@@ -399,6 +388,6 @@ int main() {
 		string input;
 		getline(fin, input);
 		string result = pfair.makeEncryption(input);
-		cout << endl<<"전체 번역 결과" << result<<endl<<endl;
+		cout << endl<<"전체 번역 결과"<<endl << result<<endl<<endl;
 	}
 }
